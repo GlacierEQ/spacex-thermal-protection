@@ -12,6 +12,11 @@ shows characteristic thermal signature 10-30 seconds before failure.
 Physics: 1D heat equation with temperature-dependent conductivity,
 ablation mass loss, and structural integrity indices.
 Pure math, zero external dependencies.
+
+Fun fact: The Space Shuttle had ~24,000 tiles. Each one unique.
+Starship has ~18,000. Each one critical.
+This system monitors them all. In real time. During reentry.
+No pressure.
 """
 
 import math
