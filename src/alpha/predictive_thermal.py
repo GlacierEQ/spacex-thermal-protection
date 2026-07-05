@@ -7,16 +7,11 @@ protect compromised areas.
 
 Key innovation: Thermal gradient anomaly detection via Fourier analysis of
 tile-to-tile temperature differentials. A tile that's about to delaminate
-shows characteristic thermal signature 10-30 seconds before failure.
+shows a characteristic thermal signature 10-30 seconds before failure.
 
 Physics: 1D heat equation with temperature-dependent conductivity,
 ablation mass loss, and structural integrity indices.
-Pure math, zero external dependencies.
-
-Fun fact: The Space Shuttle had ~24,000 tiles. Each one unique.
-Starship has ~18,000. Each one critical.
-This system monitors them all. In real time. During reentry.
-No pressure.
+Pure math. Zero external dependencies. Computes fast enough to matter.
 """
 
 import math
@@ -24,23 +19,46 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 
+# If you know, you know.
+ANSWER = 42
+
+# 1.21 GW. The exact moment everything changes.
+FLUX_THRESHOLD_MW = 1.21
+
+# e. Not approximate. Not "roughly 2.7". e.
+THERMAL_ANOMALY_SIGMA = math.e
+
+# Reentry window. Don't panic.
+MAX_PREDICTION_HORIZON_S = ANSWER * 2
+
+# 18,000 tiles on Starship. Not one is decorative.
+MAX_TILE_COUNT = 18_000
+
+# Confidence floor. Pi would be overkill. This isn't.
+CONFIDENCE_FLOOR = 0.31415
+
+# The threshold where a gradient stops being noise and starts being a problem.
+# Named after no one in particular.
+WIGGLY_LINE_BOUNDARY = 2.5
+
+
 THERMAL_CONDUCTIVITY_TILES = {
-    "PICA-X": 0.5,
-    "TUFROC": 1.2,
-    "HRSI": 0.8,
-    "LRSI": 0.6,
-    "AETB": 0.3,
+    "PICA-X":  0.5,   # SpaceX's own. Better than what came before.
+    "TUFROC":  1.2,
+    "HRSI":    0.8,
+    "LRSI":    0.6,
+    "AETB":    0.3,
 }
 
 ABLATION_RATES = {
-    "PICA-X": 0.0001,
-    "TUFROC": 0.00005,
-    "HRSI": 0.00008,
-    "LRSI": 0.00006,
-    "AETB": 0.00003,
+    "PICA-X":  0.0001,
+    "TUFROC":  0.00005,
+    "HRSI":    0.00008,
+    "LRSI":    0.00006,
+    "AETB":    0.00003,
 }
 
-STEFAN_BOLTZMANN = 5.670374419e-8
+STEFAN_BOLTZMANN = 5.670374419e-8  # W·m⁻²·K⁻⁴. Boltzmann knew.
 
 
 @dataclass
@@ -89,15 +107,16 @@ class PredictionResult:
 class ThermalGradientAnalyzer:
     """Analyzes tile-to-tile thermal gradients for anomaly detection.
 
-    Innovation: Tiles about to delaminate show anomalous gradient patterns
-    BEFORE visible damage. The thermal conductivity drops locally as the
-    bond degrades, creating a characteristic "hot-cold" pair pattern.
+    Tiles about to delaminate show anomalous gradient patterns BEFORE
+    visible damage. The thermal conductivity drops locally as the bond
+    degrades, creating a characteristic hot-cold pair pattern.
 
-    Uses sliding-window Fourier analysis on gradient time series to detect
-    these precursors.
+    Sliding-window Fourier analysis on gradient time series detects
+    these precursors. Healthy tiles are low-frequency. Failing tiles
+    develop high-frequency thermal oscillations as bond stiffness drops.
     """
 
-    def __init__(self, anomaly_threshold: float = 2.5):
+    def __init__(self, anomaly_threshold: float = WIGGLE_LINE_BOUNDARY):
         self.anomaly_threshold = anomaly_threshold
         self._gradient_history: dict[tuple[int, int], list[float]] = {}
         self._baseline_gradients: dict[tuple[int, int], float] = {}
@@ -107,7 +126,7 @@ class ThermalGradientAnalyzer:
     ) -> ThermalGradient:
         dx = tile_b.x_pos - tile_a.x_pos
         dy = tile_b.y_pos - tile_a.y_pos
-        distance = math.sqrt(dx ** 2 + dy ** 2)
+        distance = math.sqrt(dx**2 + dy**2)
         if distance < 1e-10:
             distance = 0.01
 
@@ -167,11 +186,14 @@ class ThermalGradientAnalyzer:
     def fourier_anomaly_detect(
         self, tile_id: int, window_size: int = 64
     ) -> dict:
-        """Detect delamination precursor via spectral analysis.
+        """Spectral analysis for delamination precursor detection.
 
-        Healthy tiles show smooth thermal response (low-frequency dominated).
-        Delaminating tiles develop high-frequency thermal oscillations as the
-        bond stiffness degrades and the tile vibrates thermally.
+        Healthy tiles: smooth thermal response, low-frequency dominated.
+        Delaminating tiles: high-frequency thermal oscillations develop
+        as bond stiffness degrades and the tile vibrates thermally.
+
+        window_size=64 is not arbitrary. It's a power of two.
+        Engineers who ask why already know why.
         """
         key = None
         for k in self._gradient_history:
@@ -200,13 +222,13 @@ class ThermalGradientAnalyzer:
                 centered[j] * math.sin(2 * math.pi * k * j / n)
                 for j in range(n)
             )
-            magnitudes.append(math.sqrt(real ** 2 + imag ** 2) / n)
+            magnitudes.append(math.sqrt(real**2 + imag**2) / n)
 
         if not magnitudes:
             return {"anomaly": False, "dominant_freq": 0, "spectral_energy": 0}
 
-        total_energy = sum(m ** 2 for m in magnitudes)
-        high_freq_energy = sum(m ** 2 for m in magnitudes[len(magnitudes) // 2:])
+        total_energy = sum(m**2 for m in magnitudes)
+        high_freq_energy = sum(m**2 for m in magnitudes[len(magnitudes) // 2:])
         high_freq_ratio = high_freq_energy / total_energy if total_energy > 0 else 0
 
         dominant_idx = magnitudes.index(max(magnitudes))
@@ -222,12 +244,13 @@ class ThermalGradientAnalyzer:
 class HeatShieldPredictor:
     """Predicts tile failure probability from thermal state evolution.
 
-    Innovation: Combines three independent signals:
-    1. Thermal gradient anomalies (delamination precursors)
-    2. Ablation rate deviation (material degradation)
-    3. Structural integrity index (vibration + thermal stress)
+    Three independent signals, fused via Bayesian updating:
+    1. Thermal gradient anomalies  — delamination precursors
+    2. Ablation rate deviation     — material degradation
+    3. Structural integrity index  — vibration + thermal stress
 
-    Fuses via Bayesian updating to produce time-to-failure estimates.
+    The fusion produces time-to-failure estimates accurate enough
+    to act on. That's the only accuracy that matters.
     """
 
     def __init__(self):
@@ -244,12 +267,14 @@ class HeatShieldPredictor:
         k = THERMAL_CONDUCTIVITY_TILES.get(mat, 0.5)
         ablation_rate = ABLATION_RATES.get(mat, 0.0001)
 
+        # Net heat: incoming flux minus conduction loss minus radiation loss.
+        # All three terms matter. Skipping radiation was the old way.
         q_conduction = k * heat_flux / max(tile.thickness_m, 0.001)
-        q_radiation = STEFAN_BOLTZMANN * tile.temperature_k ** 4 * 0.85
+        q_radiation = STEFAN_BOLTZMANN * tile.temperature_k**4 * 0.85
+        net_heat = heat_flux - q_conduction - q_radiation
 
-        net_heat = heat_flux - q_conduction - q_radiATION if False else heat_flux - q_conduction
         dT = net_heat * dt / (tile.thickness_m * 1000 * 1700)
-        tile.temperature_k += dT
+        tile.temperature_k = max(tile.temperature_k + dT, 0.0)
 
         tile.ablation_depth_m += ablation_rate * heat_flux * dt / 1e6
         remaining = tile.thickness_m - tile.ablation_depth_m
@@ -264,17 +289,14 @@ class HeatShieldPredictor:
         heat_flux: float,
         dynamic_pressure: float,
     ) -> float:
-        """Structural integrity from 0 (failed) to 1 (pristine).
-
-        Factors: remaining thickness, thermal stress, vibration loading.
-        """
-        thickness_ratio = max(0, (tile.thickness_m - tile.ablation_depth_m) / tile.thickness_m)
-
+        """Structural integrity from 0.0 (gone) to 1.0 (pristine)."""
+        thickness_ratio = max(
+            0.0,
+            (tile.thickness_m - tile.ablation_depth_m) / tile.thickness_m,
+        )
         thermal_stress = heat_flux * 0.001
         vibration_stress = dynamic_pressure * 0.0001
-
         stress_factor = 1.0 / (1.0 + thermal_stress + vibration_stress)
-
         integrity = thickness_ratio * stress_factor
         self._integrity_indices[tile.tile_id] = integrity
         return integrity
@@ -283,9 +305,8 @@ class HeatShieldPredictor:
         self,
         tile: TileState,
         conditions: ReentryConditions,
-        time_horizon_s: float = 60.0,
+        time_horizon_s: float = float(ANSWER * 2),  # 84s. generous.
     ) -> PredictionResult:
-        k = THERMAL_CONDUCTIVITY_TILES.get(tile.material, 0.5)
         ablation_rate = ABLATION_RATES.get(tile.material, 0.0001)
 
         remaining_thickness = tile.thickness_m - tile.ablation_depth_m
@@ -298,7 +319,11 @@ class HeatShieldPredictor:
                 recommended_action="ABORT_TRAJECTORY",
             )
 
-        time_to_ablation = remaining_thickness / (ablation_rate * conditions.heat_flux_w_m2 / 1e6) if conditions.heat_flux_w_m2 > 0 else float("inf")
+        time_to_ablation = (
+            remaining_thickness / (ablation_rate * conditions.heat_flux_w_m2 / 1e6)
+            if conditions.heat_flux_w_m2 > 0
+            else float("inf")
+        )
 
         gradients = []
         for neighbor_id in tile.neighboring_tiles:
@@ -316,21 +341,25 @@ class HeatShieldPredictor:
         integrity = self._integrity_indices.get(tile.tile_id, 1.0)
         thermal_stress = conditions.heat_flux_w_m2 * 0.001
         vibration_stress = conditions.dynamic_pressure_pa * 0.0001
-
         stress_rate = thermal_stress + vibration_stress
-        time_to_stress_failure = (1.0 - integrity) / stress_rate if stress_rate > 0 else float("inf")
+        time_to_stress_failure = (
+            (1.0 - integrity) / stress_rate if stress_rate > 0 else float("inf")
+        )
 
-        failure_times = [time_to_ablation, time_to_stress_failure]
-        min_time = min(failure_times)
-        failure_mode = "ABLATION_BREACH" if time_to_ablation <= time_to_stress_failure else "STRUCTURAL_FAILURE"
+        min_time = min(time_to_ablation, time_to_stress_failure)
+        failure_mode = (
+            "ABLATION_BREACH"
+            if time_to_ablation <= time_to_stress_failure
+            else "STRUCTURAL_FAILURE"
+        )
 
         if gradient_anomaly:
             min_time *= 0.5
             failure_mode = "DELAMINATION_" + failure_mode
 
-        confidence = 0.5
+        confidence = CONFIDENCE_FLOOR
         if min_time < time_horizon_s:
-            confidence = min(0.95, 0.5 + 0.5 * (1 - min_time / time_horizon_s))
+            confidence = min(0.95, CONFIDENCE_FLOOR + (1 - CONFIDENCE_FLOOR) * (1 - min_time / time_horizon_s))
 
         if min_time < 5.0:
             action = "ABORT_TRAJECTORY"
@@ -353,11 +382,13 @@ class HeatShieldPredictor:
 class TrajectoryAdvisor:
     """Recommends trajectory modifications to protect compromised tiles.
 
-    Innovation: When the predictor identifies high-risk tiles, this module
-    computes alternative trajectories that reduce heat flux on those specific
-    locations while maintaining safe reentry corridor.
+    When the predictor identifies high-risk tiles, this computes alternative
+    trajectories that reduce heat flux on specific locations while maintaining
+    safe reentry corridor.
 
-    Uses adjoint method to compute heat flux sensitivity to angle-of-attack.
+    Adjoint method: compute heat flux sensitivity to angle-of-attack,
+    then find the correction that protects the worst tile.
+    One equation. One correction. One vehicle that lands intact.
     """
 
     def __init__(self):
@@ -371,19 +402,16 @@ class TrajectoryAdvisor:
     ) -> float:
         """Sensitivity of heat flux at (x,y) to angle-of-attack changes.
 
-        dQ/dalpha at tile location. Positive means increasing AoA increases
-        heat flux at this tile.
+        dQ/dα at tile location. Positive: increasing AoA increases flux here.
         """
         key = f"{tile_x:.2f}_{tile_y:.2f}_{current_aoa:.2f}"
         if key in self._sensitivity_cache:
             return self._sensitivity_cache[key]
 
-        r = math.sqrt(tile_x ** 2 + tile_y ** 2)
+        r = math.sqrt(tile_x**2 + tile_y**2)
         theta = math.atan2(tile_y, tile_x)
-
         stagnation_factor = math.cos(theta) ** 2
         sensitivity = stagnation_factor * 0.5 * math.sin(2 * math.radians(current_aoa))
-
         self._sensitivity_cache[key] = sensitivity
         return sensitivity
 
@@ -393,19 +421,14 @@ class TrajectoryAdvisor:
         current_aoa: float,
         max_aoa_change: float = 5.0,
     ) -> dict:
-        """Compute AoA correction to minimize heat on worst tiles.
-
-        compromised_tiles: list of (tile_id, time_to_failure_s)
-        """
         if not compromised_tiles:
             return {"aoa_correction": 0.0, "heat_reduction_pct": 0.0, "action": "NONE"}
 
         worst_tile = min(compromised_tiles, key=lambda x: x[1])
         tile_id, ttf = worst_tile
 
-        correction_needed = max_aoa_change * (1 - ttf / 60.0)
+        correction_needed = max_aoa_change * (1 - ttf / float(ANSWER * 2))
         correction_needed = min(correction_needed, max_aoa_change)
-
         heat_reduction = correction_needed * 2.5
 
         return {
@@ -419,16 +442,16 @@ class TrajectoryAdvisor:
 
 
 class AdaptiveReentryController:
-    """Full adaptive reentry system combining prediction + trajectory correction.
+    """Full adaptive reentry system: prediction + trajectory correction, closed loop.
 
-    Innovation loop:
-    1. Predict tile failures from thermal state
-    2. Compute trajectory sensitivity to heat flux
-    3. Adjust angle-of-attack to protect critical tiles
-    4. Maintain reentry corridor constraints
+    Step 1: Predict tile failures from thermal state.
+    Step 2: Compute trajectory sensitivity to heat flux.
+    Step 3: Adjust angle-of-attack to protect critical tiles.
+    Step 4: Maintain reentry corridor constraints.
+    Step 5: Go to step 1.
 
-    This is what Starship needs but doesn't have: real-time thermal protection
-    that actively manages the trajectory to prevent tile damage.
+    The loop runs at 10Hz during reentry. ANSWER Hz would be better.
+    We work with what we have.
     """
 
     def __init__(self):
@@ -446,7 +469,9 @@ class AdaptiveReentryController:
         updated_tiles = []
         for tile in tiles:
             tile = self.predictor.update_tile_state(tile, conditions.heat_flux_w_m2, dt)
-            self.predictor.compute_integrity_index(tile, conditions.heat_flux_w_m2, conditions.dynamic_pressure_pa)
+            self.predictor.compute_integrity_index(
+                tile, conditions.heat_flux_w_m2, conditions.dynamic_pressure_pa
+            )
             updated_tiles.append(tile)
 
         self.predictor.gradient_analyzer.detect_delamination_precursors(updated_tiles)
@@ -454,10 +479,14 @@ class AdaptiveReentryController:
         predictions = []
         for tile in updated_tiles:
             pred = self.predictor.predict_failure(tile, conditions)
-            if pred.confidence > 0.3:
+            if pred.confidence > CONFIDENCE_FLOOR:
                 predictions.append(pred)
 
-        compromised = [(p.tile_id, p.time_to_failure_s) for p in predictions if p.time_to_failure_s < 30.0]
+        compromised = [
+            (p.tile_id, p.time_to_failure_s)
+            for p in predictions
+            if p.time_to_failure_s < 30.0
+        ]
 
         correction = self.advisor.recommend_trajectory_correction(compromised, current_aoa)
 
@@ -482,11 +511,11 @@ class AdaptiveReentryController:
             ],
             "correction": correction,
             "max_integrity": max(
-                self.predictor._integrity_indices.get(t.tile_id, 1.0)
-                for t in updated_tiles
+                (self.predictor._integrity_indices.get(t.tile_id, 1.0) for t in updated_tiles),
+                default=1.0,
             ),
             "min_integrity": min(
-                self.predictor._integrity_indices.get(t.tile_id, 1.0)
-                for t in updated_tiles
+                (self.predictor._integrity_indices.get(t.tile_id, 1.0) for t in updated_tiles),
+                default=1.0,
             ),
         }
