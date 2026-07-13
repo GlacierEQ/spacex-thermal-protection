@@ -116,7 +116,7 @@ class ThermalGradientAnalyzer:
     develop high-frequency thermal oscillations as bond stiffness drops.
     """
 
-    def __init__(self, anomaly_threshold: float = WIGGLE_LINE_BOUNDARY):
+    def __init__(self, anomaly_threshold: float = WIGGLY_LINE_BOUNDARY):
         self.anomaly_threshold = anomaly_threshold
         self._gradient_history: dict[tuple[int, int], list[float]] = {}
         self._baseline_gradients: dict[tuple[int, int], float] = {}
