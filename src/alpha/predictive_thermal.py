@@ -292,10 +292,11 @@ class HeatShieldPredictor:
         """Structural integrity from 0.0 (gone) to 1.0 (pristine)."""
         thickness_ratio = max(
             0.0,
-            (tile.thickness_m - tile.ablation_depth_m) / tile.thickness_m,
+            (tile.thickness_m - tile.ablation_depth_m) / max(tile.thickness_m, 1e-9),
         )
-        thermal_stress = heat_flux * 0.001
-        vibration_stress = dynamic_pressure * 0.0001
+        # Normalized loads: 1.0 ≈ 1 MW/m² heat · 10 kPa dynamic pressure.
+        thermal_stress = heat_flux / 1e6
+        vibration_stress = dynamic_pressure / 1e4
         stress_factor = 1.0 / (1.0 + thermal_stress + vibration_stress)
         integrity = thickness_ratio * stress_factor
         self._integrity_indices[tile.tile_id] = integrity
@@ -338,13 +339,20 @@ class HeatShieldPredictor:
             mean_grad = sum(gradients) / len(gradients)
             gradient_anomaly = abs(mean_grad) > 5000
 
-        integrity = self._integrity_indices.get(tile.tile_id, 1.0)
-        thermal_stress = conditions.heat_flux_w_m2 * 0.001
-        vibration_stress = conditions.dynamic_pressure_pa * 0.0001
-        stress_rate = thermal_stress + vibration_stress
-        time_to_stress_failure = (
-            (1.0 - integrity) / stress_rate if stress_rate > 0 else float("inf")
+        # Prefer a freshly computed integrity; never treat "pristine" as already failed.
+        integrity = self.compute_integrity_index(
+            tile, conditions.heat_flux_w_m2, conditions.dynamic_pressure_pa
         )
+        thermal_load = conditions.heat_flux_w_m2 / 1e6
+        vibration_load = conditions.dynamic_pressure_pa / 1e4
+        # Integrity-units per second under current load (moderate reentry → multi-second horizon).
+        stress_rate = thermal_load * 0.05 + vibration_load * 0.02
+        # Time until integrity is exhausted at current stress — not (1 - I)/rate,
+        # which incorrectly yields 0s for a pristine tile.
+        if stress_rate > 0 and integrity > 0:
+            time_to_stress_failure = integrity / stress_rate
+        else:
+            time_to_stress_failure = float("inf")
 
         min_time = min(time_to_ablation, time_to_stress_failure)
         failure_mode = (
