@@ -1,0 +1,24 @@
+{
+  "repo": "spacex-thermal-protection",
+  "algorithm": "sha256",
+  "file_count": 17,
+  "hashes": {
+    "README.md": "608c54179499a26f1283a8e021a4a341a07cb240825f0dd1780e35e733452759",
+    "EASTER_EGGS.md": "0c4fc58a6163b54497fc8327ec77f4293330eea4ba636e30db202836bd450900",
+    ".gitignore": "bdf5823fb39358309d859824c0bfe95e917594bd370372743c15fe08f55f98b2",
+    "AKOS.md": "fb5d5d6e0a7409113c2d49e294ba1352c615c518d9bfc0209fa027dfb70c6650",
+    "AGENTS.md": "dfd8c0adcc1b0c4252b4230076b27833fb1d06f357401092aac00b7664e5c44b",
+    "HELIX_STRAND.md": "17126abf1ea9e2dda9bbbe072dccff63c058a33319f529363a8e0be190e479ed",
+    "mastermind_sidecar.py": "f99ef6057dd660539e9d49d9367430647edf318a842286e3dd7ab0532216127a",
+    "SECURITY_AND_FLEET_OPS.md": "26141c0f07d95847d679de423ddb7bdee6f3e319d204383c89a58d6d3bb610c7",
+    "HELIX.md": "f3118541957d487500c05de3f3d1076820368fe9fd55170685221baf29b9539d",
+    ".pytest_cache/CACHEDIR.TAG": "37dc88ef9a0abeddbe81053a6dd8fdfb13afb613045ea1eb4a5c815a74a3bde4",
+    ".pytest_cache/README.md": "73fd6fccdd802c419a6b2d983d6c3173b7da97558ac4b589edec2dfe443db9ad",
+    ".pytest_cache/.gitignore": "3ed731b65d06150c138e2dadb0be0697550888a6b47eb8c45ecc9adba8b8e9bd",
+    ".pytest_cache/v/cache/nodeids": "017bb9a86def19b70096eb7bb92498c88be3e08e01eee8d5b7e80d2caf1bbc27",
+    ".pytest_cache/v/cache/lastfailed": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "tests/test_core.py": "8ca5fb171b30a92da04d5f5d910bfc171c0ce712a1d00d06c6a9c953a02a1819",
+    ".github/workflows/ci.yml": "393542f8109cac2611d6ab41b8b062e6cc8be46894379568f15c0b7e2c1a639f",
+    "src/alpha/predictive_thermal.py": "641686bae75823a561a0d38e421be1fa9ad7792169246842b76872cb46ef9e82"
+  }
+}
