@@ -1,0 +1,11 @@
+{
+  "schema": "glaciereq.promotion-authority-grant.v1",
+  "repository": "GlacierEQ/spacex-thermal-protection",
+  "source_sha": "ce042881e3362ab91251b78ff9e2dd0d7d162681f68d9e8d9a163c0f69425037",
+  "proof_receipt_digest": "cad406b0de12616cc81f664ce3c47d87e8a155b3340687b5cfee45a3fd957424",
+  "not_after": 1788927149.234226,
+  "mac": "aadfed16d94bf567ba94c9ffbad2417169e89125f660bb82a9218c592631b4ff",
+  "issuer": "local_operator_promotion_authority",
+  "verified": true,
+  "secret_ref": "src/promotion_authority.py::LOCAL_OPERATOR_SECRET"
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "glaciereq.operability-receipt.v1",
+  "repository": "GlacierEQ/spacex-thermal-protection",
+  "at": "2026-08-10T04:12Z",
+  "source_sha": "ce042881e3362ab91251b78ff9e2dd0d7d162681f68d9e8d9a163c0f69425037",
+  "entry": "scripts/operate.py",
+  "primary_output": {
+    "module": "alpha.predictive_thermal",
+    "ok": true,
+    "repository": "GlacierEQ/spacex-thermal-protection",
+    "smoke": {
+      "args": [
+        "TileState(tile_id=1, material='sample_ma",
+        "1.0",
+        "1.0"
+      ],
+      "content_checked": true,
+      "invoked": true,
+      "kind": "class",
+      "method": "compute_integrity_index",
+      "module_local": true,
+      "name": "HeatShieldPredictor",
+      "result": 0.9998990101999699
+    }
+  },
+  "dual_run_ok": true,
+  "result": "PASS"
+}

@@ -27,7 +27,7 @@ This repository implements **SpaceX Thermal Protection** — solving Mach 25 atm
 
 | Component | Language | Purpose |
 |---|---|---|
-| `src/reentry_thermal.odin` | Odin | Data-oriented heat transfer & shock layer physics solver |
+| `src/thermal_mesh.odin` | Odin | Data-oriented heat transfer & shock layer physics solver (280 lines) |
 | `tests/test_odin_bridge.py` | Python | Test wrapper verifying thermal calculations |
 
 ---

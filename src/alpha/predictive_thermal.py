@@ -20,7 +20,6 @@ from typing import Optional
 
 
 # If you know, you know.
-ANSWER = 42
 
 # 1.21 GW. The exact moment everything changes.
 FLUX_THRESHOLD_MW = 1.21
@@ -29,7 +28,7 @@ FLUX_THRESHOLD_MW = 1.21
 THERMAL_ANOMALY_SIGMA = math.e
 
 # Reentry window. Don't panic.
-MAX_PREDICTION_HORIZON_S = ANSWER * 2
+MAX_PREDICTION_HORIZON_S = 84.0  # seconds
 
 # 18,000 tiles on Starship. Not one is decorative.
 MAX_TILE_COUNT = 18_000
@@ -47,7 +46,7 @@ THERMAL_CONDUCTIVITY_TILES = {
     "TUFROC":  1.2,
     "HRSI":    0.8,
     "LRSI":    0.6,
-    "AETB":    0.3,
+    "AETB":    0.3
 }
 
 ABLATION_RATES = {
@@ -55,7 +54,7 @@ ABLATION_RATES = {
     "TUFROC":  0.00005,
     "HRSI":    0.00008,
     "LRSI":    0.00006,
-    "AETB":    0.00003,
+    "AETB":    0.00003
 }
 
 STEFAN_BOLTZMANN = 5.670374419e-8  # W·m⁻²·K⁻⁴. Boltzmann knew.
@@ -237,7 +236,7 @@ class ThermalGradientAnalyzer:
             "anomaly": high_freq_ratio > 0.3,
             "dominant_freq": dominant_idx,
             "spectral_energy": total_energy,
-            "high_freq_ratio": high_freq_ratio,
+            "high_freq_ratio": high_freq_ratio
         }
 
 
@@ -306,7 +305,7 @@ class HeatShieldPredictor:
         self,
         tile: TileState,
         conditions: ReentryConditions,
-        time_horizon_s: float = float(ANSWER * 2),  # 84s. generous.
+        time_horizon_s: float = 84.0,  # 84s. generous.
     ) -> PredictionResult:
         ablation_rate = ABLATION_RATES.get(tile.material, 0.0001)
 
@@ -435,7 +434,7 @@ class TrajectoryAdvisor:
         worst_tile = min(compromised_tiles, key=lambda x: x[1])
         tile_id, ttf = worst_tile
 
-        correction_needed = max_aoa_change * (1 - ttf / float(ANSWER * 2))
+        correction_needed = max_aoa_change * (1 - ttf / 84.0)
         correction_needed = min(correction_needed, max_aoa_change)
         heat_reduction = correction_needed * 2.5
 
@@ -445,7 +444,7 @@ class TrajectoryAdvisor:
             "heat_reduction_pct": heat_reduction,
             "action": "ADJUST_AOA" if correction_needed > 0.5 else "HOLD",
             "critical_tile": tile_id,
-            "time_to_failure_s": ttf,
+            "time_to_failure_s": ttf
         }
 
 
@@ -458,7 +457,7 @@ class AdaptiveReentryController:
     Step 4: Maintain reentry corridor constraints.
     Step 5: Go to step 1.
 
-    The loop runs at 10Hz during reentry. ANSWER Hz would be better.
+    The loop runs at 10Hz during reentry. higher sample rates would be better.
     We work with what we have.
     """
 
@@ -502,7 +501,7 @@ class AdaptiveReentryController:
             "conditions": conditions,
             "predictions": len(predictions),
             "compromised": len(compromised),
-            "correction": correction,
+            "correction": correction
         })
 
         return {
@@ -513,7 +512,7 @@ class AdaptiveReentryController:
                     "time_to_failure_s": round(p.time_to_failure_s, 1),
                     "failure_mode": p.failure_mode,
                     "confidence": round(p.confidence, 2),
-                    "action": p.recommended_action,
+                    "action": p.recommended_action
                 }
                 for p in predictions
             ],
@@ -525,5 +524,5 @@ class AdaptiveReentryController:
             "min_integrity": min(
                 (self.predictor._integrity_indices.get(t.tile_id, 1.0) for t in updated_tiles),
                 default=1.0,
-            ),
+            )
         }
