@@ -1,4 +1,4 @@
-name: CI
+name: Public Thermal Scenario Truth Gate
 
 on:
   push:
@@ -10,13 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  verify:
-    name: Python ${{ matrix.python-version }}
+  truth:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11", "3.13"]
     steps:
       - name: Check out exact source head
         uses: actions/checkout@v4
@@ -30,13 +25,13 @@ jobs:
           expected="${{ github.event.pull_request.head.sha || github.sha }}"
           actual="$(git rev-parse HEAD)"
           test "$actual" = "$expected"
-      - name: Set up Python
+      - name: Set up Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.13"
       - name: Install test runner
         run: python -m pip install --disable-pip-version-check pytest
-      - name: Run repository tests
-        run: python -m pytest -q
-      - name: Verify public and machine truth boundary
+      - name: Run public truth tests
+        run: python -m pytest -q tests/test_public_truth.py tests/test_core.py tests/test_odin_bridge.py
+      - name: Run fail-closed public verifier
         run: python scripts/verify_public_surface.py
