@@ -50,9 +50,19 @@ def test_machine_state_does_not_claim_promotion_or_odin_runtime() -> None:
     state = json.loads(read("machine/excellence-state.json"))
     assert state["state"] == "TESTED"
     assert state["principal_state"] == "TESTED"
+    for gate in (
+        "PYTHON_DETERMINISTIC_PROOF",
+        "ADVERSARIAL_BOUNDARY",
+        "PUBLIC_TRUTH_BOUNDARY",
+        "ODIN_SOURCE_CONTRACT",
+    ):
+        assert state["gates"][gate] == "REQUIRES_CURRENT_HEAD_RECEIPT"
     assert state["gates"]["ODIN_NATIVE_EXECUTION"] == "NOT_PROVEN"
     assert state["gates"]["FLIGHT_TPS_AUTHORITY"] == "NOT_CLAIMED"
-    assert state["proof_receipt"]["state"] == "PENDING_CURRENT_EXACT_HEAD_CI"
+    receipt = state["proof_receipt"]
+    assert receipt["state"] == "EXTERNAL_EXACT_HEAD_RECEIPT_REQUIRED"
+    assert set(receipt["required"]) == {"CI", "Public Thermal Scenario Truth Gate"}
+    assert "never self-asserts" in receipt["binding_rule"]
 
 
 def test_odin_bridge_is_explicitly_source_contract_only() -> None:

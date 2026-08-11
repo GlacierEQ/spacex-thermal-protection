@@ -46,8 +46,19 @@ def main() -> int:
     assert excellence["state"] == "TESTED"
     assert excellence["principal_state"] == "TESTED"
     assert excellence["evidence_state"] == TOKEN
+    for gate in (
+        "PYTHON_DETERMINISTIC_PROOF",
+        "ADVERSARIAL_BOUNDARY",
+        "PUBLIC_TRUTH_BOUNDARY",
+        "ODIN_SOURCE_CONTRACT",
+    ):
+        assert excellence["gates"][gate] == "REQUIRES_CURRENT_HEAD_RECEIPT"
     assert excellence["gates"]["ODIN_NATIVE_EXECUTION"] == "NOT_PROVEN"
     assert excellence["gates"]["FLIGHT_TPS_AUTHORITY"] == "NOT_CLAIMED"
+    assert excellence["proof_receipt"]["state"] == (
+        "EXTERNAL_EXACT_HEAD_RECEIPT_REQUIRED"
+    )
+    assert "never self-asserts" in excellence["proof_receipt"]["binding_rule"]
     assert contract["current"]["state"] == "TESTED"
     assert contract["evidence_state"] == TOKEN
     assert contract["next_gate"] == (
@@ -62,6 +73,7 @@ def main() -> int:
                 "capabilities": APPROVED_CAPABILITIES,
                 "odin_runtime_proven": False,
                 "flight_control_authority": False,
+                "admission_requires_external_exact_head_receipts": True,
             },
             sort_keys=True,
         )
