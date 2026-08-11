@@ -1,1 +1,9 @@
-{"capabilities": ["hyper-scaling"]}
+{
+  "schema": "glaciereq.repo-capabilities.v1",
+  "evidence_state": "LOCAL_THERMAL_SCENARIO_MODEL_NOT_FLIGHT_TPS_AUTHORITY",
+  "capabilities": [
+    "deterministic-local-multi-tile-thermal-scenario-modeling",
+    "bounded-local-thermal-gradient-and-spectral-analysis",
+    "source-verified-odin-data-oriented-reference"
+  ]
+}
