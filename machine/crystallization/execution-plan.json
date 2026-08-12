@@ -1,0 +1,8 @@
+{
+  "naturally_deployable": false,
+  "test_commands": [["bash", "scripts/ci/verify_python.sh"], ["bash", "scripts/ci/verify_odin.sh"]],
+  "build_commands": [["python", "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation", "-w", "dist"], ["odin", "build", "src/thermal_mesh.odin", "-file"]],
+  "runtime_commands": [["thermal-scenario-demo", "--compact"], ["python", "scripts/operate.py"], ["native Odin thermal executable"]],
+  "truth_commands": [["python", "scripts/verify_public_surface.py"]],
+  "deployment_reason": "Local/reference thermal scenario laboratory; physical or flight deployment requires separate telemetry, calibration, safety, and authority evidence."
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "glaciereq.crystallization-capabilities.v1",
+  "capabilities": [
+    {"id":"multi_tile_thermal_scenario_model","state":"WORKING","implementation_paths":["src/alpha/predictive_thermal.py"],"verification":["tests/test_core.py"]},
+    {"id":"gradient_and_spectral_analysis","state":"WORKING","implementation_paths":["src/alpha/predictive_thermal.py"],"verification":["tests/test_core.py","tests/test_installable_thermal_lab.py"]},
+    {"id":"ablation_integrity_threshold_model","state":"WORKING","implementation_paths":["src/alpha/predictive_thermal.py"],"verification":["tests/test_core.py","tests/test_installable_thermal_lab.py"]},
+    {"id":"bounded_non_control_scenario_comparison","state":"WORKING","implementation_paths":["src/alpha/predictive_thermal.py"],"verification":["tests/test_core.py","tests/test_public_truth.py"]},
+    {"id":"installable_python_product","state":"WORKING","implementation_paths":["pyproject.toml","src/thermal_scenario_cli.py"],"verification":["scripts/ci/verify_python.sh","tests/test_installable_thermal_lab.py"]},
+    {"id":"direct_deterministic_operability","state":"WORKING","implementation_paths":["scripts/operate.py"],"verification":["scripts/ci/verify_python.sh"]},
+    {"id":"odin_data_oriented_reference","state":"WORKING","implementation_paths":["src/thermal_mesh.odin"],"verification":["tests/test_odin_bridge.py"]},
+    {"id":"pinned_native_odin_compile_run_gate","state":"WORKING","implementation_paths":["scripts/ci/verify_odin.sh",".github/workflows/ci.yml"],"verification":["tests/test_odin_bridge.py"]},
+    {"id":"public_truth_boundary","state":"WORKING","implementation_paths":["scripts/verify_public_surface.py","machine/excellence-state.json"],"verification":["tests/test_public_truth.py",".github/workflows/public-truth.yml"]}
+  ]
+}

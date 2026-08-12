@@ -1,0 +1,10 @@
+{
+  "schema": "glaciereq.crystallization-purpose.v1",
+  "repository": "GlacierEQ/spacex-thermal-protection",
+  "canonical_purpose": "Provide an installable deterministic local multi-tile thermal scenario laboratory with bounded Python gradient/ablation/integrity analysis and a natively compiled/executed Odin data-oriented reference.",
+  "consumers": ["developers", "reviewers", "local thermal simulations"],
+  "natural_runtime": "installable local Python library/CLI plus native Odin reference executable",
+  "naturally_deployable": false,
+  "deployment_reason": "Flight, test-stand, TPS, or physical-control deployment would add external telemetry, calibration, safety, and authority requirements outside the repository-owned local scenario purpose.",
+  "evidence_state": "LOCAL_THERMAL_SCENARIO_MODEL_NOT_FLIGHT_TPS_AUTHORITY"
+}

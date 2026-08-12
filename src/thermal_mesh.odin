@@ -4,7 +4,7 @@
 // thermal arithmetic as an illustrative reference implementation. It is not a
 // proprietary SpaceX/Starship model, flight-safety system, calibrated TPS
 // predictor, or trajectory-control implementation.
-package thermal_mesh
+package main
 
 import "core:fmt"
 import "core:math"
@@ -160,7 +160,7 @@ evaluate_scenario :: proc(
 	}
 
 	rate := material_ablation_rate(state.material) * conditions.heat_flux_w_m2 / 1e6
-	time_to_ablation := 1e9
+	time_to_ablation: f64 = 1.0e9
 	if rate > 0 {
 		time_to_ablation = remaining / rate
 	}
@@ -171,17 +171,16 @@ evaluate_scenario :: proc(
 	)
 	stress_rate := conditions.heat_flux_w_m2 / 1e6 * 0.05 +
 		conditions.dynamic_pressure_pa / 1e4 * 0.02
-	time_to_stress := 1e9
+	time_to_stress: f64 = 1.0e9
 	if stress_rate > 0 && integrity > 0 {
 		time_to_stress = integrity / stress_rate
 	}
 	modeled := min(time_to_ablation, time_to_stress)
 	bounded := min(modeled, horizon)
 	severity := min(1.0, max(0.0, 1.0 - bounded / horizon))
-	mode := if time_to_ablation <= time_to_stress {
-		"SCENARIO_ABLATION_THRESHOLD"
-	} else {
-		"SCENARIO_STRESS_THRESHOLD"
+	mode := "SCENARIO_STRESS_THRESHOLD"
+	if time_to_ablation <= time_to_stress {
+		mode = "SCENARIO_ABLATION_THRESHOLD"
 	}
 	label := "OBSERVE_SCENARIO"
 	if bounded < 5 {

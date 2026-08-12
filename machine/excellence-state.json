@@ -1,14 +1,9 @@
 {
-  "schema": "glaciereq.repo-excellence-state.v2",
+  "schema": "glaciereq.repo-excellence-state.v3",
   "repository": "GlacierEQ/spacex-thermal-protection",
   "state": "TESTED",
   "principal_state": "TESTED",
   "evidence_state": "LOCAL_THERMAL_SCENARIO_MODEL_NOT_FLIGHT_TPS_AUTHORITY",
-  "supersedes": {
-    "git_head": "ac5e17b80627a614379a399c4a24d1deda4fb8f1",
-    "prior_principal_state": "PROMOTED",
-    "reason": "prior promotion posture exceeded repository-native proof and conflated Python mirror tests with Odin execution plus flight/TPS authority claims"
-  },
   "gates": {
     "IDENTITY_RESOLVED": "PASS",
     "CENTRAL_MECHANISM_PRESENT": "PASS",
@@ -16,15 +11,18 @@
     "ADVERSARIAL_BOUNDARY": "REQUIRES_CURRENT_HEAD_RECEIPT",
     "PUBLIC_TRUTH_BOUNDARY": "REQUIRES_CURRENT_HEAD_RECEIPT",
     "ODIN_SOURCE_CONTRACT": "REQUIRES_CURRENT_HEAD_RECEIPT",
-    "ODIN_NATIVE_EXECUTION": "NOT_PROVEN",
-    "PRODUCTION_DEPLOYMENT": "NOT_PROVEN",
+    "ODIN_NATIVE_EXECUTION": "REQUIRES_CURRENT_HEAD_RECEIPT",
+    "PRODUCTION_DEPLOYMENT": "NOT_APPLICABLE_TO_LOCAL_REFERENCE_PURPOSE",
     "FLIGHT_TPS_AUTHORITY": "NOT_CLAIMED",
-    "CANONICAL_POSITION_RESOLVED": "PENDING"
+    "CANONICAL_POSITION_RESOLVED": "PENDING_TERMINAL_RECEIPT"
   },
   "verified_capabilities": [
     "deterministic-local-multi-tile-thermal-scenario-modeling",
     "bounded-local-thermal-gradient-and-spectral-analysis",
-    "source-verified-odin-data-oriented-reference"
+    "source-verified-odin-data-oriented-reference",
+    "installable-local-python-product",
+    "direct-deterministic-operability",
+    "pinned-native-odin-compile-run-gate"
   ],
   "nonclaims": [
     "no SpaceX affiliation or proprietary access",
@@ -33,16 +31,13 @@
     "no trajectory guidance, abort logic, or hardware control",
     "no live mesh/provider integration",
     "no production deployment",
-    "no Odin compiler/runtime proof"
+    "no source-file self-certification of native Odin execution"
   ],
   "proof_receipt": {
     "state": "EXTERNAL_EXACT_HEAD_RECEIPT_REQUIRED",
-    "required": [
-      "CI",
-      "Public Thermal Scenario Truth Gate"
-    ],
-    "binding_rule": "admission authority must record successful workflow run IDs whose head_sha equals the canonical repository head; this source file never self-asserts its own future CI result"
+    "required": ["CI", "Public Thermal Scenario Truth Gate"],
+    "binding_rule": "admission authority must record successful workflow run IDs whose head_sha equals the repository candidate head; this source file never self-asserts its own future CI or native Odin result"
   },
-  "evolution_cursor": "next:native_odin_toolchain_proof_or_canonical_position_resolution",
-  "updated_at": "2026-08-11T13:36:00-10:00"
+  "evolution_cursor": "next:execute_pinned_native_odin_gate_then_issue_terminal_receipt",
+  "updated_at": "2026-08-12T11:49:00-10:00"
 }

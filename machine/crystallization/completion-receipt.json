@@ -1,0 +1,86 @@
+{
+  "schema": "glaciereq.crystallization-completion-receipt.v1",
+  "repository": "GlacierEQ/spacex-thermal-protection",
+  "status": "CRYSTALLIZED",
+  "verified_source_head": "b23b294335edf935c0d4824fb2b6ba50391f1265",
+  "canonical_purpose": "Provide an installable deterministic local multi-tile thermal scenario laboratory with bounded Python gradient, ablation, integrity, spectral, and threshold-horizon analysis plus a natively compiled and executed Odin data-oriented reference.",
+  "evidence_state": "LOCAL_THERMAL_SCENARIO_MODEL_NOT_FLIGHT_TPS_AUTHORITY",
+  "capabilities": {
+    "material_count": 9,
+    "implemented_count": 9,
+    "verified_count": 9,
+    "remaining_gap_count": 0
+  },
+  "proof": {
+    "ci": {
+      "workflow_run_id": 31644867079,
+      "conclusion": "success",
+      "jobs": {
+        "python_3_11": {"job_id": 94275968683, "conclusion": "success"},
+        "python_3_13": {"job_id": 94275968733, "conclusion": "success"},
+        "native_odin_dev_2026_08": {"job_id": 94275968690, "conclusion": "success"}
+      },
+      "proved": [
+        "25 deterministic and adversarial Python tests",
+        "installable wheel build and installed CLI execution",
+        "direct canonical thermal-scenario runtime",
+        "public-surface verification",
+        "pinned official Odin archive checksum verification",
+        "native Odin exact-source check/build/execute",
+        "all crystallization capabilities WORKING",
+        "empty material gap matrix"
+      ]
+    },
+    "public_truth": {
+      "workflow_run_id": 31644867061,
+      "conclusion": "success"
+    },
+    "native_odin": {
+      "compiler_release": "dev-2026-08",
+      "compiler_version": "dev-2026-08-nightly:902106f",
+      "compiler_archive": "odin-linux-amd64-dev-2026-08.tar.gz",
+      "compiler_archive_sha256": "d858c0a182bb28d7b04b04dbb8aed592a9c96c84e4400ee917c74b45848a4d87",
+      "source_path": "src/thermal_mesh.odin",
+      "source_sha256": "c0f1ef4c2bfa6d8d4f890d6690b0968f2bad340a88ffc355bf64ada42f504582",
+      "binary_sha256": "7aab68f3453963957ffb571149f9145dab0488b45c465e9e7eb79e3fcd906d1e",
+      "artifact_id": 9160322081,
+      "artifact_zip_sha256": "6b4cd6837a1fa89c6b2e2a766292ce228faf2b0566ff0b219bb31cf3745e2a74",
+      "compile": "PASS",
+      "execute": "PASS",
+      "control_authority": false
+    }
+  },
+  "observed_python_runtime": {
+    "wheel_sha256": "b91a44cc0877546abd3d6759252910b64f6bad849b3bf7cec630ee45883a55f3",
+    "demo_digest": "55ca43ca2ff0d95efa942805182a352561cd11072c3c34beaf99b43f77c7a6c5",
+    "gradient_k_per_m": 52.0,
+    "spectral_dominant_bin": 1,
+    "tiles_updated": 2,
+    "prediction_count": 2,
+    "modeled_threshold_horizon_s": 23.146,
+    "review_label": "REVIEW_ELEVATED_SCENARIO",
+    "comparison_action": "COMPARE_ALTERNATIVE_SCENARIO",
+    "control_authority": false,
+    "external_inputs_consumed": 0,
+    "external_actions_executed": 0
+  },
+  "build": "PASS",
+  "tests": "PASS",
+  "runtime": "PASS",
+  "native_odin_execution": "PASS",
+  "truth_verification": "PASS",
+  "deployment": {
+    "status": "NOT_APPLICABLE",
+    "reason": "The repository is complete as a local/reference thermal scenario laboratory. Flight, test-stand, TPS, or physical-control deployment would introduce external telemetry, calibration, safety, and authority requirements outside the verified purpose."
+  },
+  "truth_boundary": [
+    "No SpaceX affiliation, endorsement, employment, or proprietary access is established.",
+    "No real spacecraft, re-entry, TPS, tile, trajectory, or flight telemetry is established.",
+    "No calibrated heat-shield failure probability, remaining useful life, diagnosis, or certification is established.",
+    "No trajectory guidance, abort authority, angle-of-attack command, or hardware control is established.",
+    "No production deployment, flight readiness, safety suitability, scale, or performance is established.",
+    "No live MCP, APEX, AKOS, Mastermind, provider, or agent-mesh integration is established."
+  ],
+  "known_non_blocking_quality_note": "The native Odin compiler warns that a 1,296,016-byte Thermal_Mesh local may be large for the stack. The exact-head native binary nevertheless compiled and executed successfully. This warning does not invalidate the bounded local-scenario purpose but remains a future hardening opportunity.",
+  "receipt_head_rule": "This receipt is terminal only if the commit carrying it passes CI including Python 3.11, Python 3.13, and native Odin plus the Public Thermal Scenario Truth Gate, and remains fresh against canonical main immediately before merge."
+}
