@@ -1,9 +1,14 @@
 {
-  "schema": "glaciereq.repo-capabilities.v1",
+  "schema": "glaciereq.repo-capabilities.v2",
   "evidence_state": "LOCAL_THERMAL_SCENARIO_MODEL_NOT_FLIGHT_TPS_AUTHORITY",
+  "status": "FUNCTIONAL_CRYSTALLIZATION_CANDIDATE",
   "capabilities": [
     "deterministic-local-multi-tile-thermal-scenario-modeling",
     "bounded-local-thermal-gradient-and-spectral-analysis",
-    "source-verified-odin-data-oriented-reference"
-  ]
+    "source-verified-odin-data-oriented-reference",
+    "installable-local-python-product",
+    "direct-deterministic-operability",
+    "pinned-native-odin-compile-run-gate"
+  ],
+  "terminal_status_requires": "exact-head Python and native Odin execution receipts, public truth proof, empty material gap matrix, and source-bound completion receipt"
 }

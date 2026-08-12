@@ -1,14 +1,17 @@
 {
-  "schema": "glaciereq.repo-target-contract.v1",
+  "schema": "glaciereq.repo-target-contract.v2",
   "identity": {
     "repository_id": "GlacierEQ/spacex-thermal-protection",
-    "family": "elite-estate"
+    "family": "local-thermal-scenario-laboratory",
+    "purpose": "installable local multi-tile thermal scenario model with a pinned native Odin data-oriented reference execution gate"
   },
   "current": {
-    "state": "TESTED",
+    "state": "FUNCTIONAL_CRYSTALLIZATION_CANDIDATE",
     "implemented": true,
-    "tested": true,
-    "deployed": false
+    "tested_parent_head": true,
+    "terminal_current_head_verified": false,
+    "deployed": false,
+    "naturally_deployable": false
   },
   "evidence_state": "LOCAL_THERMAL_SCENARIO_MODEL_NOT_FLIGHT_TPS_AUTHORITY",
   "verified_scope": [
@@ -16,7 +19,9 @@
     "bounded gradient and spectral analysis",
     "simplified ablation and integrity arithmetic",
     "scenario threshold-horizon and severity scoring",
-    "source-contract verified Odin data-oriented reference"
+    "source-contract verified Odin data-oriented reference",
+    "installable Python product surface",
+    "repository-owned exact compiler digest pinned native Odin gate"
   ],
   "nonclaims": [
     "no SpaceX affiliation, endorsement, employment, or proprietary access",
@@ -25,12 +30,7 @@
     "no trajectory guidance or hardware control authority",
     "no live MCP/APEX/AKOS/Mastermind/provider/agent-mesh integration",
     "no production deployment or operational safety suitability",
-    "no Odin compiler/runtime proof"
+    "native Odin execution is not inferred from source; it requires an external exact-head workflow receipt"
   ],
-  "next_gate": "native Odin compilation and execution bound to exact source SHA",
-  "donor_plan": {
-    "mode": "bounded-capability-donor",
-    "donors": []
-  },
-  "frozen_at": "2026-08-11T13:36:00-10:00"
+  "next_gate": "exact-head native Odin execution receipt plus terminal crystallization receipt"
 }
