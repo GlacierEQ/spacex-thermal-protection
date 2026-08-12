@@ -4,7 +4,7 @@
 // thermal arithmetic as an illustrative reference implementation. It is not a
 // proprietary SpaceX/Starship model, flight-safety system, calibrated TPS
 // predictor, or trajectory-control implementation.
-package thermal_mesh
+package main
 
 import "core:fmt"
 import "core:math"
