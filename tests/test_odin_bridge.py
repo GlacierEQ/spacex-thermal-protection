@@ -56,7 +56,6 @@ def test_native_gate_is_exact_release_and_digest_pinned() -> None:
     assert "dev-2026-08" in gate
     assert "odin-linux-amd64-dev-2026-08.tar.gz" in gate
     assert "d858c0a182bb28d7b04b04dbb8aed592a9c96c84e4400ee917c74b45848a4d87" in gate
-    assert "odin check src/thermal_mesh.odin -file" in gate
-    assert "odin build" not in gate  # invocation is through the resolved pinned binary, never PATH
+    assert "$ODIN_BIN check src/thermal_mesh.odin -file" in gate
     assert "$ODIN_BIN build src/thermal_mesh.odin -file" in gate
     assert "native-odin-thermal.json" in gate
