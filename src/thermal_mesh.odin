@@ -160,7 +160,7 @@ evaluate_scenario :: proc(
 	}
 
 	rate := material_ablation_rate(state.material) * conditions.heat_flux_w_m2 / 1e6
-	time_to_ablation := 1e9
+	time_to_ablation: f64 = 1.0e9
 	if rate > 0 {
 		time_to_ablation = remaining / rate
 	}
@@ -171,7 +171,7 @@ evaluate_scenario :: proc(
 	)
 	stress_rate := conditions.heat_flux_w_m2 / 1e6 * 0.05 +
 		conditions.dynamic_pressure_pa / 1e4 * 0.02
-	time_to_stress := 1e9
+	time_to_stress: f64 = 1.0e9
 	if stress_rate > 0 && integrity > 0 {
 		time_to_stress = integrity / stress_rate
 	}
