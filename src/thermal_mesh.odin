@@ -178,10 +178,9 @@ evaluate_scenario :: proc(
 	modeled := min(time_to_ablation, time_to_stress)
 	bounded := min(modeled, horizon)
 	severity := min(1.0, max(0.0, 1.0 - bounded / horizon))
-	mode := if time_to_ablation <= time_to_stress {
-		"SCENARIO_ABLATION_THRESHOLD"
-	} else {
-		"SCENARIO_STRESS_THRESHOLD"
+	mode := "SCENARIO_STRESS_THRESHOLD"
+	if time_to_ablation <= time_to_stress {
+		mode = "SCENARIO_ABLATION_THRESHOLD"
 	}
 	label := "OBSERVE_SCENARIO"
 	if bounded < 5 {
