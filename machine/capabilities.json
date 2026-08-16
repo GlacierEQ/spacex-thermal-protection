@@ -8,7 +8,27 @@
     "source-verified-odin-data-oriented-reference",
     "installable-local-python-product",
     "direct-deterministic-operability",
-    "pinned-native-odin-compile-run-gate"
+    "pinned-native-odin-compile-run-gate",
+    "apex-mass-recovery-enrolled"
   ],
-  "terminal_status_requires": "exact-head Python and native Odin execution receipts, public truth proof, empty material gap matrix, and source-bound completion receipt"
+  "terminal_status_requires": "exact-head Python and native Odin execution receipts, public truth proof, empty material gap matrix, and source-bound completion receipt",
+  "recovery": {
+    "identity": "APEX_IS_THE_COUNTER_TO_CANONICAL_DESTRUCTION",
+    "law": "MAXIMUM_COHERENT_ADVANCE",
+    "program": "mass-job-repo-recovery",
+    "dual_plane": true
+  },
+  "planes": {
+    "verified": [
+      "deterministic-local-multi-tile-thermal-scenario-modeling",
+      "bounded-local-thermal-gradient-and-spectral-analysis",
+      "source-verified-odin-data-oriented-reference",
+      "installable-local-python-product",
+      "direct-deterministic-operability",
+      "pinned-native-odin-compile-run-gate"
+    ],
+    "implemented": [
+      "apex-mass-recovery-enrolled"
+    ]
+  }
 }
